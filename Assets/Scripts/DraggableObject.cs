@@ -29,7 +29,7 @@ public class DraggableObject : InteractableObject
     {
         base.Update();
         // Press E to switch between dragging / not dragging
-        if (Input.GetKeyDown(KeyCode.E))
+        if (isInteractable && isLookingAt && Input.GetKeyDown(KeyCode.E))
         {
             isDragging = !isDragging;
             if (isDragging)
