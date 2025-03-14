@@ -13,7 +13,9 @@ public class Portal : MonoBehaviour
     private bool isVisible = false;
 
 
-    public MeshRenderer portalScreen;   //本传送门的屏幕
+    private MeshRenderer portalScreen;   //本传送门的屏幕
+    private GameObject screenGameObject;
+    private GameObject maskGameObject;  //在无法看见镜子时、显示这个
 
 
     //斜平面裁剪相关系数
@@ -53,6 +55,11 @@ public class Portal : MonoBehaviour
         portalCamera = gameObject.GetComponentInChildren<Camera>();
         playerCamera = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Camera>();
         objectCollider = gameObject.GetComponentInChildren<Collider>();
+
+        //镜子物体获取
+        screenGameObject = transform.Find("Screen").gameObject;
+        maskGameObject = transform.Find("Mask").gameObject;
+        portalScreen = screenGameObject.GetComponent<MeshRenderer>();
     }
 
 
@@ -75,6 +82,9 @@ public class Portal : MonoBehaviour
                 isVisible = false;
             }
         }
+        //无法看见时替换镜子平面
+        screenGameObject.SetActive(isVisible);
+        maskGameObject.SetActive(!isVisible);
         if (!isVisible) return;
 
 
