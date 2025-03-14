@@ -7,7 +7,8 @@ public class DraggableObject : InteractableObject
 
     public Transform player;
     public float followSpeed = 5f;
-    public float dragDistanceFromPlayer = 0.5f;
+    public float dragDistanceFromPlayer = 1f;
+    public float rotationSpeed = 90f;
     public LayerMask collisionLayers;
     
     private Rigidbody rb;
@@ -63,6 +64,18 @@ public class DraggableObject : InteractableObject
 
             Vector3 desiredVelocity = direction.normalized * followSpeed;
             rb.velocity = desiredVelocity;
+
+            // Rotate object
+            // Left mouse button = clockwise
+            if (Input.GetMouseButton(0))
+            {
+                transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+            }
+            // Right mouse button = counter-clockwise
+            if (Input.GetMouseButton(1))
+            {
+                transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+            }
 
             // If player is out of range after moving, stop dragging
             if (player != null)
