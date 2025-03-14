@@ -6,9 +6,9 @@ public class InteractableObject : MonoBehaviour
 {
     public float interactDistance = 3f;  // 交互距离
 
-    private float interactDistanceSqr;
-    private bool isLookingAt = false;    // 是否被主摄像机注视
-    private bool isInteractable = false; // 是否在交互范围内
+    protected float interactDistanceSqr;
+    protected bool isLookingAt = false;    // 是否被主摄像机注视
+    protected bool isInteractable = false; // 是否在交互范围内
 
 
     public virtual void Start()
