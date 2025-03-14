@@ -8667,25 +8667,25 @@ MonoBehaviour:
   normalsOption: 0
   ignore: 0
   _highlighted: 0
-  fadeInDuration: 0
-  fadeOutDuration: 0
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.1
   flipY: 0
   constantWidth: 1
   minimumWidth: 0
   subMeshMask: -1
-  overlay: 0
+  overlay: 1
   overlayMode: 0
   overlayColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  overlayAnimationSpeed: 1
-  overlayMinIntensity: 0.5
-  overlayBlending: 1
+  overlayAnimationSpeed: 0
+  overlayMinIntensity: 0
+  overlayBlending: 0.976
   overlayTexture: {fileID: 0}
   overlayTextureUVSpace: 0
   overlayTextureScale: 1
   overlayTextureScrolling: {x: 0, y: 0}
   overlayVisibility: 0
   outline: 1
-  outlineColor: {r: 1, g: 0, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.6004565, b: 0, a: 1}
   outlineColorStyle: 0
   outlineGradient:
     serializedVersion: 2
@@ -8717,7 +8717,7 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   outlineGradientInLocalSpace: 0
-  outlineWidth: 0.45
+  outlineWidth: 0.2
   outlineBlurPasses: 2
   outlineQuality: 3
   outlineEdgeMode: 0
@@ -8826,6 +8826,31 @@ MonoBehaviour:
   hitFxFadeOutDuration: 0.25
   hitFxColor: {r: 1, g: 1, b: 1, a: 1}
   hitFxRadius: 0.5
+--- !u!114 &695933146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695933144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc8dc10f5b317b40942a59aa682ea4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactDistance: 3
+--- !u!114 &695933147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695933144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f388a584100b93343955dd064a95c910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &696178983 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3911342678955856025, guid: 042eb2f85eec6a947b58f7e1e9064653,

@@ -24,8 +24,8 @@ MonoBehaviour:
   padding: 0
   depthClip: 0
   normalsOption: 0
-  fadeInDuration: 1
-  fadeOutDuration: 1
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.1
   cameraDistanceFade: 0
   cameraDistanceFadeNear: 0
   cameraDistanceFadeFar: 1000

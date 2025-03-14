@@ -19,16 +19,12 @@ public class HighlightComponent : MonoBehaviour
  
     private void Start()
     {
-        DeactivateHighlight();
+        SetActivateHighlight(false);
     }
 
-    public void ActivateHighlight()
+    public void SetActivateHighlight(bool value)
     {
-        effect.highlighted = true;
+        effect.highlighted = value;
     }
 
-    public void DeactivateHighlight()
-    {
-        effect.highlighted = false;
-    }
 }
