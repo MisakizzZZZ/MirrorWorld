@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening.Core.Easing;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +23,29 @@ public class Portal : MonoBehaviour
 
 
     private RenderTexture portalTexture;    //本Portal的贴图
+
+
+    //由外部调用，检测这个物体是否可被当前的镜子看见
+    public bool CheckObjectVisibleInMirror(GameObject target)
+    {
+        //当前镜子不在玩家的可视范围则直接认为该镜子看不到此物体
+        if (!isVisible) return false;
+
+
+        // 计算相机的视锥体
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(portalCamera);
+
+        //检测物体是否有collider，如果有按照collider算
+        if (target.GetComponent<Collider>()) return GeometryUtility.TestPlanesAABB(planes, target.GetComponent<Collider>().bounds);
+
+        //否则用renderer获取物体的包围盒
+        Renderer renderer = target.GetComponent<Renderer>();
+        if (renderer == null) return false; // 没有 Renderer 可能是空物体
+
+        //判断包围盒是否在视锥体内
+        return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+
+    }
 
 
     public void Start()
