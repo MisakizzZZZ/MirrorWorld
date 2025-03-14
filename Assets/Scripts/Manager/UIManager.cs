@@ -1,0 +1,60 @@
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class UIManager : UnitySingleton<UIManager>
+{
+    //config
+    public float textFadeInDuration = 0.5f; //淡入时间
+    public float textFadeOutDuration = 0.5f; //淡出时间
+    public float textDisplayDuration = 4f;   // 文本显示时间
+
+
+    //组件
+    private GameObject canvas;
+
+
+    //
+    private TextMeshProUGUI subtitleText; // UI 文本
+
+
+    void Awake()
+    {
+        base.Awake();
+        canvas = GetComponentInChildren<Canvas>().gameObject;
+        subtitleText = transform.Find("SubtitleText").GetComponent<TextMeshProUGUI>();
+    }
+    
+
+    void Start()
+    {
+        ShowSubtitle("You are testing subtitle");
+    }
+
+
+
+    //-----------------Subtitle相关--------------
+
+    private Coroutine subtitleCoroutine; // 记录当前的协程
+    public void ShowSubtitle(string message)
+    {
+        if (subtitleCoroutine != null)
+        {
+            StopCoroutine(subtitleCoroutine);
+        }
+        subtitleCoroutine = StartCoroutine(ShowSubtitleRoutine(message));
+    }
+
+    private IEnumerator ShowSubtitleRoutine(string message)
+    {
+        subtitleText.text = message;
+        subtitleText.DOFade(1, textFadeInDuration); // 淡入
+        yield return new WaitForSeconds(textDisplayDuration); //显示秒
+        subtitleText.DOFade(0, textFadeOutDuration); // 淡出
+    }
+
+
+}
