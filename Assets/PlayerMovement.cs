@@ -4,24 +4,32 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("移动速度")]
     public float speed = 12f;
+    public float mouseSensitivity = 100f;
 
     public Camera mainCamera;
     public CharacterController characterController;
+    public Animator animator;
+
+    private float animatorSpeed = 0f;
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked; //在游戏中隐藏鼠标
         mainCamera = GetComponentInChildren<Camera>();
         characterController= GetComponentInChildren<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
 
     void Update()
     {
-        movement();
+        Movement();
+        CameraRotate();
+        SetAnimator();
+        
     }
-    void movement()
+    void Movement()
     {
         //x跟z轴移动：
         float x = Input.GetAxis("Horizontal");
@@ -29,8 +37,28 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = transform.right * x + transform.forward * z; //根据角色的朝向进行基于x轴与z轴的移动   
 
-   
+        animatorSpeed = move.magnitude;
         characterController.Move(move * speed * Time.deltaTime);
+    }
+
+    private float xRotation = 0f;
+    void CameraRotate()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        mainCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        this.transform.Rotate(Vector3.up * mouseX);
+    }
+
+
+    private void SetAnimator()
+    {
+        Debug.Log(animatorSpeed);
+        animator.SetFloat("Speed", animatorSpeed);
     }
 
 }
