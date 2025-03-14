@@ -28,13 +28,15 @@ public class InteractableObject : MonoBehaviour
         Debug.Log("与 " + gameObject.name + " 进行了交互！");
     }
 
-    private void CheckInteractable()
+    protected void CheckInteractable()
     {
         Camera mainCamera = Camera.main;
         if (mainCamera == null) return;
 
         // 计算物体与摄像机的距离
-        float distanceSqr = Vector3.SqrMagnitude(transform.position- mainCamera.transform.position);
+        Vector3 temp = transform.position - mainCamera.transform.position;
+        temp.y = 0;
+        float distanceSqr = Vector3.SqrMagnitude(temp);
         isInteractable = distanceSqr <= interactDistanceSqr;
 
         // 使用射线检测摄像机是否正对物体
@@ -48,10 +50,12 @@ public class InteractableObject : MonoBehaviour
         {
             isLookingAt = false;
         }
-        
+    }
 
+    private void HandleInteraction()
+    {
         // 当物体在交互范围内且被看着，则进入高亮状态
-        if (isInteractable&&isLookingAt)
+        if (isInteractable && isLookingAt)
         {
             SetHighlight(true);
         }
@@ -59,10 +63,7 @@ public class InteractableObject : MonoBehaviour
         {
             SetHighlight(false);
         }
-    }
 
-    private void HandleInteraction()
-    {
         //TODO 暂时写死交互键为E
         if (isInteractable && isLookingAt && Input.GetKeyDown(KeyCode.E))
         {
@@ -70,7 +71,7 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-    private void SetHighlight(bool highlight)
+    protected void SetHighlight(bool highlight)
     {
         if(GetComponent<HighlightComponent>())
         {
