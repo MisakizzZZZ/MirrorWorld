@@ -38,6 +38,11 @@ public class UIManager : UnitySingleton<UIManager>
     private TextMeshProUGUI eKeySignText;
     private CanvasGroup eKeySignCanvasGroup;
 
+    //Exit界面
+    private GameObject exitGamePanel;
+    
+
+
 
     void Awake()
     {
@@ -49,6 +54,7 @@ public class UIManager : UnitySingleton<UIManager>
         eKeySign = transform.Find("EKeySign").gameObject;
         eKeySignText = eKeySign.transform.Find("EKeySignText").gameObject.GetComponent<TextMeshProUGUI>();
         eKeySignCanvasGroup = eKeySign.GetComponent<CanvasGroup>();
+        exitGamePanel = transform.Find("GameEnd").gameObject;
     }
     
 
@@ -160,5 +166,20 @@ public class UIManager : UnitySingleton<UIManager>
         {
             eKeySign.SetActive(false);
         }
+    }
+
+    //-----------结束游戏
+    public void ShowEndGame()
+    {
+        exitGamePanel.SetActive(true);
+
+        //透明度渐变
+        var canvasGroup = exitGamePanel.GetComponent<CanvasGroup>();
+        Cursor.visible = true; //显示鼠标
+        Cursor.lockState = CursorLockMode.None;  // 解锁鼠标
+        DOTween.Kill(canvasGroup);
+        canvasGroup.alpha = 0; // 初始透明度
+        canvasGroup.DOFade(1, 0.5f); // 0.5 秒内淡入到 1
+        DOVirtual.DelayedCall(0.5f, () => Time.timeScale = 0); //0.5f后游戏暂停计时
     }
 }
