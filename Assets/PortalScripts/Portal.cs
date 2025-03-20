@@ -11,7 +11,7 @@ public class Portal : MonoBehaviour
     //优化
     private Collider objectCollider;
     private bool isVisible = false;
-
+    private float hFov = 0;
 
     private MeshRenderer portalScreen;   //本传送门的屏幕
     private GameObject screenGameObject;
@@ -52,6 +52,8 @@ public class Portal : MonoBehaviour
 
     public void Start()
     {
+        
+
         portalCamera = gameObject.GetComponentInChildren<Camera>();
         playerCamera = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Camera>();
         objectCollider = gameObject.GetComponentInChildren<Collider>();
@@ -60,6 +62,11 @@ public class Portal : MonoBehaviour
         screenGameObject = transform.Find("Screen").gameObject;
         maskGameObject = transform.Find("Mask").gameObject;
         portalScreen = screenGameObject.GetComponent<MeshRenderer>();
+
+        //hFov获取
+        float vFov = Camera.main.fieldOfView; // 获取纵向FOV
+        float aspectRatio = Camera.main.aspect; // 宽高比 (width / height)
+        hFov = 2f * Mathf.Atan(Mathf.Tan(vFov * Mathf.Deg2Rad / 2f) * aspectRatio);
     }
 
 
@@ -72,8 +79,21 @@ public class Portal : MonoBehaviour
             // 获取摄像机的视锥体平面
             Plane[] frustumPlanes = GeometryUtility.CalculateFrustumPlanes(playerCamera);
 
+
+            //先判断人物是否在镜子前方，如果不在的话将直接不允许渲染,使用点乘
+
+            Debug.Log((Mathf.Acos(transform.forward.x * playerCamera.transform.forward.x + transform.forward.z * playerCamera.transform.forward.z)));
+            if ((transform.forward.x * (playerCamera.transform.position - this.transform.position).x + transform.forward.z * (playerCamera.transform.position - this.transform.position).z)<0)
+            {
+                isVisible = false;
+            }
+            //使用视锥体的夹角进行剔除
+            else if(Mathf.Acos(transform.forward.x*playerCamera.transform.forward.x+ transform.forward.z * playerCamera.transform.forward.z)<(0.5 * Mathf.PI-0.5*hFov))
+            {
+                isVisible = false;
+            }
             // 判断物体的包围盒是否在视锥体内
-            if (GeometryUtility.TestPlanesAABB(frustumPlanes, objectCollider.bounds))
+            else if (GeometryUtility.TestPlanesAABB(frustumPlanes, objectCollider.bounds))
             {
                 isVisible = true;
             }
@@ -187,7 +207,6 @@ public class Portal : MonoBehaviour
             portalCamera.projectionMatrix = portalCamera.projectionMatrix;
         }
     }
-
 
 
 }
