@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class ChestPasswordGUI : MonoBehaviour
 {
@@ -12,10 +13,14 @@ public class ChestPasswordGUI : MonoBehaviour
     public TextMeshProUGUI[] digitInputs;
     // 正确的4位密码（可根据需要修改）
     public string correctPassword = "2333";
-
+    
 
     public string currentInput = "";
 
+    // 密码正确后隐藏箱子、显示钥匙
+    public GameObject chest_opaque;
+    public GameObject chest_fade;
+    public GameObject key;
 
     /// <summary>
     /// 打开密码界面，清空所有输入，并将焦点设置到第一个输入框
@@ -132,6 +137,7 @@ public class ChestPasswordGUI : MonoBehaviour
         //否则检测是否正确，错误则设置为红色
         if (currentInput == correctPassword)
         {
+            ShowFadeChestAndKey();
             HidePanel();
             Debug.Log($"密码正确，箱子打开！");
         }
@@ -143,5 +149,75 @@ public class ChestPasswordGUI : MonoBehaviour
             }
             Debug.Log($"密码错误！");
         }
+    }
+
+    private void ShowFadeChestAndKey()
+    {
+        // 隐藏实体箱子
+        if (chest_opaque != null)
+        {
+            chest_opaque.SetActive(false);
+        }
+        // 显示虚化箱子
+        if (chest_fade != null)
+        {
+            chest_fade.SetActive(true);
+            StartCoroutine(FadeOutChest());
+        }
+        // 显示钥匙
+        if (key != null)
+        {
+            key.SetActive(true);
+        }
+    }
+
+    IEnumerator FadeOutChest()
+    {
+        Debug.Log("Start fading out chest");
+        // 获取 fade chest 的所有 Renderer（包括子对象）
+        Renderer[] renderers = chest_fade.GetComponentsInChildren<Renderer>();
+
+        // 在开始渐隐前，可确保材质的初始 Alpha 为 1
+        foreach (var rend in renderers)
+        {
+            Material mat = rend.material;
+            Color col = mat.color;
+            col.a = 1f;
+            mat.color = col;
+        }
+
+        float fadeDuration = 1f;
+        float elapsedTime = 0f;
+        // 存储各材质的初始颜色
+        Color[] initialColors = new Color[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+            initialColors[i] = renderers[i].material.color;
+
+        // 逐步降低 Alpha 值
+        while (elapsedTime < fadeDuration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material mat = renderers[i].material;
+                Color newColor = initialColors[i];
+                newColor.a = alpha;
+                mat.color = newColor;
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // 最后确保完全透明，并隐藏 fade chest
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Material mat = renderers[i].material;
+            Color newColor = initialColors[i];
+            newColor.a = 0f;
+            mat.color = newColor;
+        }
+        chest_fade.SetActive(false);
+        Debug.Log("Finished fading out chest");
+        // Deactivate the Password Panel Manager this script is attached to
+        gameObject.SetActive(false);
     }
 }

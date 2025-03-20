@@ -33,7 +33,7 @@ public class UIManager : UnitySingleton<UIManager>
         canvas = GetComponentInChildren<Canvas>().gameObject;
         subtitleText = transform.Find("SubtitleText").GetComponent<TextMeshProUGUI>();
         screenDamageCanvas = transform.Find("ScreenDamageCanvas").gameObject;
-        passwordPanel = transform.Find("PasswordPanel").GetComponent<ChestPasswordGUI>();
+        passwordPanel = transform.Find("PasswordPanelManager").GetComponent<ChestPasswordGUI>();
     }
     
 
