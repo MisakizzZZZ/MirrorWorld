@@ -13,12 +13,17 @@ public class PlayerMovement : MonoBehaviour
 
     private float animatorSpeed = 0f;
 
+    //防止人物被顶飞
+    private float originalYPosition;
+
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; //在游戏中隐藏鼠标
         mainCamera = GetComponentInChildren<Camera>();
         characterController= GetComponentInChildren<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        originalYPosition = this.transform.position.y;
     }
 
 
@@ -39,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
 
         animatorSpeed = move.magnitude;
         characterController.Move(move * speed * Time.deltaTime);
+
+        //防止人物被顶飞
+        this.transform.position = new Vector3(this.transform.position.x, originalYPosition, this.transform.position.z);
     }
 
     private float xRotation = 0f;

@@ -37,7 +37,6 @@ public class ChestPasswordGUI : MonoBehaviour
     public void HidePanel()
     {
         passwordPanel.SetActive(false);
-        Debug.Log("关闭了密码界面");
     }
 
     /// <summary>

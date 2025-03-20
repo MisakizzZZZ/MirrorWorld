@@ -25,6 +25,12 @@ public class DraggableObject : InteractableObject
         rb.isKinematic = true;
     }
 
+    public override bool ShouldReleaseEKeySign()
+    {
+        return !isLookingAt || !isInteractable || isDragging;
+    }
+
+
     // Update is called once per frame
     public override void Update()
     {
@@ -96,6 +102,7 @@ public class DraggableObject : InteractableObject
             if (isInteractable && isLookingAt)
             {
                 SetHighlight(true);
+                ShowEInteractSign();
             }
             else
             {

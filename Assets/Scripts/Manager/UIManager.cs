@@ -137,8 +137,8 @@ public class UIManager : UnitySingleton<UIManager>
     {
         if(interactObject&&interactObject.enabled&&interactObject.gameObject.activeSelf)
         {
-            Debug.Log(interactObject.shouldReleaseEKeySign());
-            if(!interactObject.shouldReleaseEKeySign())
+            Debug.Log(interactObject.ShouldReleaseEKeySign());
+            if(!interactObject.ShouldReleaseEKeySign())
             {
                 if(eKeySign.activeSelf == false)
                 {

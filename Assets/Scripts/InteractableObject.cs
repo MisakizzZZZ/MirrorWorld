@@ -21,14 +21,14 @@ public class InteractableObject : MonoBehaviour
     }
 
     //接口：是否可以释放提示EKey交互的UI？
-    public bool shouldReleaseEKeySign()
+    public virtual bool ShouldReleaseEKeySign()
     {
         return !isLookingAt || !isInteractable;
     }
 
 
     //接口：将自己注册到UIManager中，显示E键交互的提示信息
-    public void showEInteractSign()
+    public void ShowEInteractSign()
     {
         UIManager.Instance.SetEKeySignActive(this);
     }
@@ -75,7 +75,7 @@ public class InteractableObject : MonoBehaviour
         // 当物体在交互范围内且被看着，则进入高亮状态
         if (isInteractable && isLookingAt)
         {
-            showEInteractSign();
+            ShowEInteractSign();
             SetHighlight(true);
         }
         else
