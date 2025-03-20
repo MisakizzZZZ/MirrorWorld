@@ -92,7 +92,7 @@ public class DraggableObject : InteractableObject
         }
         else
         {
-            // µ±ÎïÌåÔÚ½»»¥·¶Î§ÄÚÇÒ±»¿´×Å£¬Ôò½øÈë¸ßÁÁ×´Ì¬
+            // å½“ç‰©ä½“åœ¨äº¤äº’èŒƒå›´å†…ä¸”è¢«çœ‹ç€ï¼Œåˆ™è¿›å…¥é«˜äº®çŠ¶æ€
             if (isInteractable && isLookingAt)
             {
                 SetHighlight(true);

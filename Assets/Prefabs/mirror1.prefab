@@ -332,8 +332,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7536882, y: 2.0640743, z: 0.29372534}
-  m_Center: {x: 0.021251362, y: 0.9509872, z: -0.018957144}
+  m_Size: {x: 0.73746365, y: 2.0640743, z: 0.2531637}
+  m_Center: {x: 0.018547058, y: 0.9509872, z: -0.039238}
 --- !u!114 &7645055438818534212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactDistance: 3
+  interactWord: 
+  interactSignOffset: {x: 0, y: 0, z: 0}
   player: {fileID: 0}
   followSpeed: 5
   dragDistanceFromPlayer: 0.5

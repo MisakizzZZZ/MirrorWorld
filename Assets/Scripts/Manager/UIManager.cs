@@ -33,6 +33,11 @@ public class UIManager : UnitySingleton<UIManager>
         "Gah—!!",
     };
 
+    //EKey界面
+    private GameObject eKeySign;
+    private TextMeshProUGUI eKeySignText;
+    private CanvasGroup eKeySignCanvasGroup;
+
 
     void Awake()
     {
@@ -41,6 +46,9 @@ public class UIManager : UnitySingleton<UIManager>
         subtitleText = transform.Find("SubtitleText").GetComponent<TextMeshProUGUI>();
         screenDamageCanvas = transform.Find("ScreenDamageCanvas").gameObject;
         passwordPanel = transform.Find("PasswordPanelManager").GetComponent<ChestPasswordGUI>();
+        eKeySign = transform.Find("EKeySign").gameObject;
+        eKeySignText = eKeySign.transform.Find("EKeySignText").gameObject.GetComponent<TextMeshProUGUI>();
+        eKeySignCanvasGroup = eKeySign.GetComponent<CanvasGroup>();
     }
     
 
@@ -49,6 +57,13 @@ public class UIManager : UnitySingleton<UIManager>
         //隐藏密码界面
         HidePasswordPanel();
     }
+
+    void Update()
+    {
+        SetInteractEKeySign();
+    }
+
+
 
 
 
@@ -109,7 +124,41 @@ public class UIManager : UnitySingleton<UIManager>
     }
 
 
+    //---------E key悬浮
+    private InteractableObject interactObject = null;
+    public void SetEKeySignActive(InteractableObject target)
+    {
+        interactObject = target;
+    }
 
 
 
+    private void SetInteractEKeySign()
+    {
+        if(interactObject&&interactObject.enabled&&interactObject.gameObject.activeSelf)
+        {
+            Debug.Log(interactObject.shouldReleaseEKeySign());
+            if(!interactObject.shouldReleaseEKeySign())
+            {
+                if(eKeySign.activeSelf == false)
+                {
+                    eKeySign.SetActive(true);
+                    DOTween.Kill(eKeySignCanvasGroup);
+                    eKeySignCanvasGroup.alpha = 0; // 初始透明度
+                    eKeySignCanvasGroup.DOFade(1, 0.5f); // 0.5 秒内淡入到 1
+                }
+                
+                eKeySign.transform.position = Camera.main.WorldToScreenPoint(interactObject.transform.position + interactObject.interactSignOffset);
+                eKeySignText.text = interactObject.interactWord == "" ? "Interact" : interactObject.interactWord;
+            }
+            else
+            {
+                interactObject = null;
+            }
+        }
+        else
+        {
+            eKeySign.SetActive(false);
+        }
+    }
 }

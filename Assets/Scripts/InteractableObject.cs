@@ -6,6 +6,10 @@ public class InteractableObject : MonoBehaviour
 {
     public float interactDistance = 3f;  // 交互距离
 
+    //交互悬浮提示
+    public string interactWord; //交互时的提示词
+    public Vector3 interactSignOffset = Vector3.zero; //标志悬浮偏移
+
     protected float interactDistanceSqr;
     protected bool isLookingAt = false;    // 是否被主摄像机注视
     protected bool isInteractable = false; // 是否在交互范围内
@@ -15,6 +19,20 @@ public class InteractableObject : MonoBehaviour
     {
         interactDistanceSqr = interactDistance* interactDistance;
     }
+
+    //接口：是否可以释放提示EKey交互的UI？
+    public bool shouldReleaseEKeySign()
+    {
+        return !isLookingAt || !isInteractable;
+    }
+
+
+    //接口：将自己注册到UIManager中，显示E键交互的提示信息
+    public void showEInteractSign()
+    {
+        UIManager.Instance.SetEKeySignActive(this);
+    }
+
 
 
     public virtual void Update()
@@ -57,6 +75,7 @@ public class InteractableObject : MonoBehaviour
         // 当物体在交互范围内且被看着，则进入高亮状态
         if (isInteractable && isLookingAt)
         {
+            showEInteractSign();
             SetHighlight(true);
         }
         else
