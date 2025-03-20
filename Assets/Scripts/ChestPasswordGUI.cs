@@ -40,10 +40,8 @@ public class ChestPasswordGUI : MonoBehaviour
     /// </summary>
     void ClearInputs()
     {
-        foreach (var input in digitInputs)
-        {
-            input.text = "";
-        }
+        currentInput = "";
+        UpdatePasswordText();
     }
 
 
