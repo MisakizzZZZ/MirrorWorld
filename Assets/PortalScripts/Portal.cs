@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    private Camera portalCamera;  //传送门摄像机、不断调整位置进行贴图绘制
+    private Camera portalCamera;  //镜子摄像机、不断调整位置进行贴图绘制
     private Camera playerCamera;  //玩家摄像机
 
     //优化
@@ -15,7 +15,7 @@ public class Portal : MonoBehaviour
     private RaycastHit[] hits = new RaycastHit[1]; // NonAlloc 数组，最多返回 1 个碰撞
     private int mirrorGhostColliderLayerMask = 0;
 
-    private MeshRenderer portalScreen;   //本传送门的屏幕
+    private MeshRenderer portalScreen;   //本镜子的屏幕
     private GameObject screenGameObject;
     private GameObject maskGameObject;  //在无法看见镜子时、显示这个
 
@@ -26,7 +26,7 @@ public class Portal : MonoBehaviour
 
 
 
-    private RenderTexture portalTexture;    //本Portal的贴图
+    private RenderTexture portalTexture;    //本的贴图
     
 
 
@@ -122,14 +122,11 @@ public class Portal : MonoBehaviour
         if (!isVisible) return;
 
 
-        CreatePortalTexture();  //创造portalTexture，这个材质中的画面由portalCam提供、渲染到此传送门上
+        CreatePortalTexture();  //创造portalTexture，这个材质中的画面由portalCam提供、渲染到此镜子上
 
 
 
         portalCamera.projectionMatrix = playerCamera.projectionMatrix;
-
-
-        //新的位置对应的localToWorldMatrix:通过旧的localToWorldMatrix 再进行一次双门迭代计算出
 
 
         Vector3 cameraPosition = playerCamera.transform.position;
@@ -151,14 +148,10 @@ public class Portal : MonoBehaviour
 
 
         // displayMask：set to 1 to display texture, otherwise will draw test colour
-        //为1的时候会绘制材质，为0的时候会显示默认颜色
-        //迭代是有深度限制的。这里采用的方法是、最深层迭代采用默认的颜色，其他的按照正常绘制
-        //因此在第一次绘制的时候、需要使用displayMask将最后一层设置某种默认颜色，然后绘制出第一张Render。此时材质中已经有了最后一层迭代看到的正确场景、可以设置Mask将其画在传送门上、继续n-1层迭代
-
         portalScreen.material.SetInt("displayMask", 0);
 
         portalCamera.transform.SetPositionAndRotation(renderPosition, renderRotation);  //设置portalCam的位置
-        SetNearClipPlane();  //设置该轮迭代的裁剪平面
+        SetNearClipPlane();  //裁剪平面
         portalCamera.Render();
 
         portalScreen.material.SetInt("displayMask", 1);
@@ -170,7 +163,7 @@ public class Portal : MonoBehaviour
 
 
 
-    //函数功能：在需要时执行(开始时以及屏幕长宽比改变时) 创造一个RenderTexture赋给传送门摄像机(portalCam)。传送门摄像机的渲染画面将渲染至此texture上。
+    //函数功能：在需要时执行(开始时以及屏幕长宽比改变时) 创造一个RenderTexture赋给镜子摄像机(portalCam)。镜子摄像机的渲染画面将渲染至此texture上。
     void CreatePortalTexture()
     {
         //在portalTexture材质不存在、以及屏幕缩放比例改变时执行
@@ -181,7 +174,7 @@ public class Portal : MonoBehaviour
                 portalTexture.Release();  //释放之前的纹理资源
             }
             portalTexture = new RenderTexture(Screen.width, Screen.height, 0);   //生成RenderTexture对象
-            portalCamera.targetTexture = portalTexture;  //把portalTexture对象赋给传送门摄像机targetTexture:可以创建一个渲染纹理应用给相机，相机视图将自动渲染到portalTexture中
+            portalCamera.targetTexture = portalTexture;  //把portalTexture对象赋给镜子摄像机targetTexture:可以创建一个渲染纹理应用给相机，相机视图将自动渲染到portalTexture中
             portalScreen.material.SetTexture("_MainTex", portalTexture);  //这个贴图将作为portalScreen的材质 保存在_MainTex里。由Shader后续调用
         }
     }
@@ -204,7 +197,7 @@ public class Portal : MonoBehaviour
 
     //函数功能：设置裁剪平面的函数
 
-    // Use custom projection matrix to align portal camera's near clip plane with the surface of the portal：使用自定义投影矩阵将传送门相机的近剪辑平面与传送门的表面对齐
+    // Use custom projection matrix to align portal camera's near clip plane with the surface of the portal：使用自定义投影矩阵将镜子相机的近剪辑平面与镜子的表面对齐
     // Note that this affects precision of the depth buffer, which can cause issues with effects like screenspace AO
     void SetNearClipPlane()
     {
