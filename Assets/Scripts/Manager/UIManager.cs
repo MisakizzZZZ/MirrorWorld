@@ -71,7 +71,7 @@ public class UIManager : UnitySingleton<UIManager>
 
     //------------------受伤特效----------------
 
-    const float damageCD = 5f;
+    const float damageCD = 4f;
     float lastTimeGetHurt = 0;
 
     //外部接口，调用后触发受伤
@@ -82,6 +82,8 @@ public class UIManager : UnitySingleton<UIManager>
             lastTimeGetHurt= Time.time;
             screenDamageCanvas.SetActive(false);
             screenDamageCanvas.SetActive(true);
+            screenDamageCanvas.GetComponentInChildren<AudioSource>().enabled = true;
+            screenDamageCanvas.GetComponentInChildren<Animator>().enabled = true;
         }
     }
 

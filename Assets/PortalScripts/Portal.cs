@@ -12,6 +12,8 @@ public class Portal : MonoBehaviour
     private Collider objectCollider;
     private bool isVisible = false;
     private float hFov = 0;
+    private RaycastHit[] hits = new RaycastHit[1]; // NonAlloc 数组，最多返回 1 个碰撞
+    private int mirrorGhostColliderLayerMask = 0;
 
     private MeshRenderer portalScreen;   //本传送门的屏幕
     private GameObject screenGameObject;
@@ -25,6 +27,7 @@ public class Portal : MonoBehaviour
 
 
     private RenderTexture portalTexture;    //本Portal的贴图
+    
 
 
     //由外部调用，检测这个物体是否可被当前的镜子看见
@@ -38,7 +41,7 @@ public class Portal : MonoBehaviour
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(portalCamera);
 
         //检测物体是否有collider，如果有按照collider算
-        if (target.GetComponent<Collider>()) return GeometryUtility.TestPlanesAABB(planes, target.GetComponent<Collider>().bounds);
+        if (target.GetComponentInChildren<Collider>()) return GeometryUtility.TestPlanesAABB(planes, target.GetComponentInChildren<Collider>().bounds);
 
         //否则用renderer获取物体的包围盒
         Renderer renderer = target.GetComponent<Renderer>();
@@ -46,6 +49,7 @@ public class Portal : MonoBehaviour
 
         //判断包围盒是否在视锥体内
         return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+
 
     }
 
@@ -67,6 +71,9 @@ public class Portal : MonoBehaviour
         float vFov = Camera.main.fieldOfView; // 获取纵向FOV
         float aspectRatio = Camera.main.aspect; // 宽高比 (width / height)
         hFov = 2f * Mathf.Atan(Mathf.Tan(vFov * Mathf.Deg2Rad / 2f) * aspectRatio);
+
+        //优化相关
+        mirrorGhostColliderLayerMask = LayerMask.GetMask("MirrorGhostCollider");
     }
 
 
@@ -82,7 +89,6 @@ public class Portal : MonoBehaviour
 
             //先判断人物是否在镜子前方，如果不在的话将直接不允许渲染,使用点乘
 
-            Debug.Log((Mathf.Acos(transform.forward.x * playerCamera.transform.forward.x + transform.forward.z * playerCamera.transform.forward.z)));
             if ((transform.forward.x * (playerCamera.transform.position - this.transform.position).x + transform.forward.z * (playerCamera.transform.position - this.transform.position).z)<0)
             {
                 isVisible = false;
@@ -95,7 +101,15 @@ public class Portal : MonoBehaviour
             // 判断物体的包围盒是否在视锥体内
             else if (GeometryUtility.TestPlanesAABB(frustumPlanes, objectCollider.bounds))
             {
-                isVisible = true;
+                //使用三条不同位置的射线进行检测、判断可见性
+                Vector3 bottom = transform.position;
+                Vector3 center = transform.position + new Vector3(0, 1.5f, 0);
+                Vector3 top = transform.position + new Vector3(0, 2.5f, 0);
+
+                if (IsRayUnobstructed(bottom, playerCamera.transform) ||
+                       IsRayUnobstructed(center, playerCamera.transform) ||
+                       IsRayUnobstructed(top, playerCamera.transform)) isVisible = true;
+                else isVisible = false;
             }
             else
             {
@@ -174,7 +188,18 @@ public class Portal : MonoBehaviour
 
 
 
+    bool IsRayUnobstructed(Vector3 origin, Transform target)
+    {
+        
+        Vector3 dir = target.position - origin;
+        float distance = dir.magnitude;
 
+        // 使用 NonAlloc 版本射线检测
+        int hitCount = Physics.RaycastNonAlloc(origin, dir.normalized, hits, distance,~mirrorGhostColliderLayerMask);
+
+        // 如果没有检测到碰撞，说明射线畅通无阻
+        return hitCount == 0;
+    }
 
 
     //函数功能：设置裁剪平面的函数
