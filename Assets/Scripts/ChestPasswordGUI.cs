@@ -7,11 +7,10 @@ using System.Collections;
 public class ChestPasswordGUI : MonoBehaviour
 {
     [Header("密码界面相关")]
-    // 包含4个Input Field的整个面板
     public GameObject passwordPanel;
-    // 数字输入框数组（顺序依次对应第一位、第二位……）
+    // 4个数字输入框数组（依次为第一、第二个，etc.）
     public TextMeshProUGUI[] digitInputs;
-    // 正确的4位密码（可根据需要修改）
+    // 正确密码
     public string correctPassword = "2333";
     
 
@@ -22,26 +21,20 @@ public class ChestPasswordGUI : MonoBehaviour
     public GameObject chest_fade;
     public GameObject key;
 
-    /// <summary>
-    /// 打开密码界面，清空所有输入，并将焦点设置到第一个输入框
-    /// </summary>
+    // 打开密码界面，清空所有输入，并将焦点设置到第一个输入框
     public void ShowPanel()
     {
         passwordPanel.SetActive(true);
         ClearInputs();
     }
 
-    /// <summary>
-    /// 隐藏密码界面
-    /// </summary>
+    // 隐藏密码界面
     public void HidePanel()
     {
         passwordPanel.SetActive(false);
     }
 
-    /// <summary>
-    /// 清空所有输入框内容
-    /// </summary>
+    // 清空所有输入框内容
     void ClearInputs()
     {
         currentInput = "";
@@ -49,12 +42,6 @@ public class ChestPasswordGUI : MonoBehaviour
     }
 
 
-
-
-    /// <summary>
-    /// 在Update中监听Backspace键的按下，
-    /// 当当前选中输入框内容为空时，自动将焦点切换到前一个输入框
-    /// </summary>
     void Update()
     {
         //当前输入是否发生了改变
@@ -118,9 +105,7 @@ public class ChestPasswordGUI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 检查4个输入框是否已输入内容，并验证密码是否正确
-    /// </summary>
+    // 检查4个输入框是否已输入内容，并验证密码是否正确
     void TrySubmitPassword()
     {
         //当前输入小于四位则设置成黑色、且不检测
@@ -173,10 +158,10 @@ public class ChestPasswordGUI : MonoBehaviour
     IEnumerator FadeOutChest()
     {
         Debug.Log("Start fading out chest");
-        // 获取 fade chest 的所有 Renderer（包括子对象）
+        // 获取 chest_fade的所有 Renderer（包括子对象）
         Renderer[] renderers = chest_fade.GetComponentsInChildren<Renderer>();
 
-        // 在开始渐隐前，可确保材质的初始 Alpha 为 1
+        // 在开始渐隐前，确保材质的初始 alpha 为 1
         foreach (var rend in renderers)
         {
             Material mat = rend.material;
@@ -187,12 +172,12 @@ public class ChestPasswordGUI : MonoBehaviour
 
         float fadeDuration = 1f;
         float elapsedTime = 0f;
-        // 存储各材质的初始颜色
+        // 存储材质的初始颜色
         Color[] initialColors = new Color[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             initialColors[i] = renderers[i].material.color;
 
-        // 逐步降低 Alpha 值
+        // 插值 alpha 到 0
         while (elapsedTime < fadeDuration)
         {
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
@@ -206,7 +191,7 @@ public class ChestPasswordGUI : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        // 最后确保完全透明，并隐藏 fade chest
+        // 确保最终完全透明
         for (int i = 0; i < renderers.Length; i++)
         {
             Material mat = renderers[i].material;
@@ -214,6 +199,7 @@ public class ChestPasswordGUI : MonoBehaviour
             newColor.a = 0f;
             mat.color = newColor;
         }
+        // 隐藏 chest_fade
         chest_fade.SetActive(false);
         Debug.Log("Finished fading out chest");
         // Deactivate the Password Panel Manager this script is attached to
