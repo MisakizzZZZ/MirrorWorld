@@ -118,6 +118,8 @@ public class DraggableObject : InteractableObject
         SetHighlight(true);
         rb.isKinematic = false;
         isDragging = true;
+
+        UIManager.Instance.ShowSubtitle("Click/hold the mouse button to rotate.");
     }
 
     private void EndDragging()

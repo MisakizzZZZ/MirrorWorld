@@ -26,6 +26,14 @@ public class SweeperAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //在玩家拿到钥匙之前、将不会运行
+        if(!KeyInteract.hasGainedKey)
+        {
+            agent.enabled = false;
+            return;
+        }
+
+
         isVisibleInAnyMirror = MirrorInteratable.CheckIsVisibleInAnyMirror(this.gameObject);
 
         if(isVisibleInAnyMirror)
