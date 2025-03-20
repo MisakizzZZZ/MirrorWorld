@@ -57,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetAnimator()
     {
-        Debug.Log(animatorSpeed);
         animator.SetFloat("Speed", animatorSpeed);
     }
 
