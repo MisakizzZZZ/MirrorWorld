@@ -20,17 +20,28 @@ public class UIManager : UnitySingleton<UIManager>
     //
     private TextMeshProUGUI subtitleText; // UI 文本
 
+    //密码界面
+    private ChestPasswordGUI passwordPanel; //使用外部的脚本接口控制
+
+    //受伤面板
+    private GameObject screenDamageCanvas;
+
 
     void Awake()
     {
         base.Awake();
         canvas = GetComponentInChildren<Canvas>().gameObject;
         subtitleText = transform.Find("SubtitleText").GetComponent<TextMeshProUGUI>();
+        screenDamageCanvas = transform.Find("ScreenDamageCanvas").gameObject;
+        passwordPanel = transform.Find("PasswordPanel").GetComponent<ChestPasswordGUI>();
     }
     
 
     void Start()
     {
+        //隐藏密码界面
+        HidePasswordPanel();
+
         ShowSubtitle("You are testing subtitle");
     }
 
@@ -55,6 +66,40 @@ public class UIManager : UnitySingleton<UIManager>
         yield return new WaitForSeconds(textDisplayDuration); //显示秒
         subtitleText.DOFade(0, textFadeOutDuration); // 淡出
     }
+
+
+
+    //------------------受伤特效----------------
+
+    const float damageCD = 5f;
+    float lastTimeGetHurt = 0;
+
+    //外部接口，调用后触发受伤
+    public void GetHurt()
+    {
+        if(Time.time - lastTimeGetHurt>damageCD)
+        {
+            lastTimeGetHurt= Time.time;
+            screenDamageCanvas.SetActive(false);
+            screenDamageCanvas.SetActive(true);
+        }
+    }
+
+    //----------------密码输入相关----------
+
+    public void ShowPasswordPanel()
+    {
+        passwordPanel.ShowPanel();
+    }
+
+
+    public void HidePasswordPanel()
+    {
+        passwordPanel.HidePanel();
+    }
+
+
+
 
 
 }

@@ -5,42 +5,38 @@ using UnityEngine.EventSystems;
 
 public class ChestPasswordGUI : MonoBehaviour
 {
-    [Header("ÃÜÂë½çÃæÏà¹Ø")]
-    // °üº¬4¸öInput FieldµÄÕû¸öÃæ°å
+    [Header("å¯†ç ç•Œé¢ç›¸å…³")]
+    // åŒ…å«4ä¸ªInput Fieldçš„æ•´ä¸ªé¢æ¿
     public GameObject passwordPanel;
-    // Êı×ÖÊäÈë¿òÊı×é£¨Ë³ĞòÒÀ´Î¶ÔÓ¦µÚÒ»Î»¡¢µÚ¶şÎ»¡­¡­£©
-    public TMP_InputField[] digitInputs;
-    // ÕıÈ·µÄ4Î»ÃÜÂë£¨¿É¸ù¾İĞèÒªĞŞ¸Ä£©
+    // æ•°å­—è¾“å…¥æ¡†æ•°ç»„ï¼ˆé¡ºåºä¾æ¬¡å¯¹åº”ç¬¬ä¸€ä½ã€ç¬¬äºŒä½â€¦â€¦ï¼‰
+    public TextMeshProUGUI[] digitInputs;
+    // æ­£ç¡®çš„4ä½å¯†ç ï¼ˆå¯æ ¹æ®éœ€è¦ä¿®æ”¹ï¼‰
     public string correctPassword = "2333";
 
-    void Start()
-    {
-        // ³õÊ¼»¯Ê±Òş²ØÃÜÂëÃæ°å
-        HidePanel();
-    }
+
+    public string currentInput = "";
+
 
     /// <summary>
-    /// ´ò¿ªÃÜÂë½çÃæ£¬Çå¿ÕËùÓĞÊäÈë£¬²¢½«½¹µãÉèÖÃµ½µÚÒ»¸öÊäÈë¿ò
+    /// æ‰“å¼€å¯†ç ç•Œé¢ï¼Œæ¸…ç©ºæ‰€æœ‰è¾“å…¥ï¼Œå¹¶å°†ç„¦ç‚¹è®¾ç½®åˆ°ç¬¬ä¸€ä¸ªè¾“å…¥æ¡†
     /// </summary>
     public void ShowPanel()
     {
         passwordPanel.SetActive(true);
         ClearInputs();
-        // ÉèÖÃ½¹µãµ½µÚÒ»¸öÊäÈë¿ò
-        EventSystem.current.SetSelectedGameObject(digitInputs[0].gameObject);
     }
 
     /// <summary>
-    /// Òş²ØÃÜÂë½çÃæ
+    /// éšè—å¯†ç ç•Œé¢
     /// </summary>
     public void HidePanel()
     {
         passwordPanel.SetActive(false);
-        Debug.Log("¹Ø±ÕÁËÃÜÂë½çÃæ");
+        Debug.Log("å…³é—­äº†å¯†ç ç•Œé¢");
     }
 
     /// <summary>
-    /// Çå¿ÕËùÓĞÊäÈë¿òÄÚÈİ
+    /// æ¸…ç©ºæ‰€æœ‰è¾“å…¥æ¡†å†…å®¹
     /// </summary>
     void ClearInputs()
     {
@@ -50,110 +46,104 @@ public class ChestPasswordGUI : MonoBehaviour
         }
     }
 
+
+
+
     /// <summary>
-    /// ´¦ÀíÃ¿¸öÊäÈë¿òµÄÊıÖµ±ä»¯£¬×Ô¶¯Ğ£ÑéÊäÈëÊÇ·ñÎªÊı×Ö£¬ÇÒµ±ÊäÈëÍê³Éºó×Ô¶¯ÒÆ¶¯½¹µã»òÌá½»ÃÜÂë
+    /// åœ¨Updateä¸­ç›‘å¬Backspaceé”®çš„æŒ‰ä¸‹ï¼Œ
+    /// å½“å½“å‰é€‰ä¸­è¾“å…¥æ¡†å†…å®¹ä¸ºç©ºæ—¶ï¼Œè‡ªåŠ¨å°†ç„¦ç‚¹åˆ‡æ¢åˆ°å‰ä¸€ä¸ªè¾“å…¥æ¡†
     /// </summary>
-    /// <param name="index">µ±Ç°ÊäÈë¿òµÄË÷Òı£¨0~3£©</param>
-    void OnDigitInputChanged(int index)
+    void Update()
     {
-        // µ±Ç°ÊäÈëµÄÄÚÈİ²»Îª¿Õ
-        if (!string.IsNullOrEmpty(digitInputs[index].text))
+        //å½“å‰è¾“å…¥æ˜¯å¦å‘ç”Ÿäº†æ”¹å˜
+        bool inputChanged = false;
+
+        //åˆ é™¤ä¸€ä¸ªå½“å‰è¾“å…¥å­—ç¬¦
+        if (passwordPanel.activeSelf && Input.GetKeyDown(KeyCode.Backspace))
         {
-            // Ö»±£ÁôµÚÒ»¸ö×Ö·û
-            char ch = digitInputs[index].text[0];
-            // Èç¹û²»ÊÇÊı×Ö£¬ÔòÇå¿Õ
-            if (!char.IsDigit(ch))
+            if (currentInput.Length > 0)
             {
-                digitInputs[index].text = "";
-                return;
-            }
-            else
-            {
-                digitInputs[index].text = ch.ToString();
+                currentInput = currentInput.Substring(0, currentInput.Length - 1);
+                Debug.Log(currentInput);
+                inputChanged = true;
             }
         }
 
-        // µ±µ±Ç°ÊäÈë¿òÒÑÓĞÄÚÈİÇÒ²»ÊÇ×îºóÒ»¸öÊ±£¬×Ô¶¯½«½¹µãÒÆ¶¯µ½ÏÂÒ»¸öÊäÈë¿ò
-        if (digitInputs[index].text.Length == 1)
+       // Esc æˆ– Q é”®å…³é—­é¢æ¿
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q))
         {
-            if (index < digitInputs.Length - 1)
+            HidePanel();
+        }
+
+        //ç›‘å¬æ•°å­—è¾“å…¥ï¼Œåœ¨å½“å‰è¾“å…¥çš„å­—ç¬¦å°äº4æ—¶ã€å‘åè¿½åŠ 
+        for (KeyCode key = KeyCode.Alpha0; key <= KeyCode.Alpha9; key++)
+        {
+            if (Input.GetKeyDown(key))
             {
-                EventSystem.current.SetSelectedGameObject(digitInputs[index + 1].gameObject);
+                if(currentInput.Length<4)
+                {
+                    inputChanged = true;
+                    currentInput += (key - KeyCode.Alpha0).ToString();
+                }
+            }
+        }
+
+
+        //åœ¨ç›‘å¬åˆ°å½“å‰æœ‰è¾“å…¥æ“ä½œã€å¹¶ä¸”è¾“å…¥çš„åºåˆ—å‘ç”Ÿæ”¹å˜æ—¶ï¼Œæ›´æ–°å¯†ç UIä¸Šæ˜¾ç¤ºçš„æ–‡å­—
+        if(inputChanged)
+        {
+            UpdatePasswordText();
+            TrySubmitPassword();
+        }
+
+
+    }
+
+
+    private void UpdatePasswordText()
+    {
+        for(int i=0;i<4;i++)
+        {
+            if(i< currentInput.Length)
+            {
+                Debug.Log(currentInput[i].ToString());
+                digitInputs[i].text = currentInput[i].ToString();
             }
             else
             {
-                // Èç¹ûÒÑ¾­ÊÇ×îºóÒ»¸öÊäÈë¿ò£¬Ôò³¢ÊÔÌá½»ÃÜÂë
-                TrySubmitPassword();
+                digitInputs[i].text = "";
             }
         }
     }
 
     /// <summary>
-    /// ÕâÀïÌá¹©ËÄ¸ö¹«¿ª·½·¨£¬·Ö±ğÓÃÓÚ4¸öÊäÈë¿òµÄOnValueChangedÊÂ¼şµ÷ÓÃ¡£
-    /// Äã¿ÉÒÔÔÚInspectorÖĞ½«Ã¿¸öInput FieldµÄOn Value ChangedÊÂ¼ş·Ö±ğ°ó¶¨ÒÔÏÂ·½·¨¡£
-    /// </summary>
-    public void OnDigit0Changed(string value) { OnDigitInputChanged(0); }
-    public void OnDigit1Changed(string value) { OnDigitInputChanged(1); }
-    public void OnDigit2Changed(string value) { OnDigitInputChanged(2); }
-    public void OnDigit3Changed(string value) { OnDigitInputChanged(3); }
-
-    /// <summary>
-    /// ÔÚUpdateÖĞ¼àÌıBackspace¼üµÄ°´ÏÂ£¬
-    /// µ±µ±Ç°Ñ¡ÖĞÊäÈë¿òÄÚÈİÎª¿ÕÊ±£¬×Ô¶¯½«½¹µãÇĞ»»µ½Ç°Ò»¸öÊäÈë¿ò
-    /// </summary>
-    void Update()
-    {
-        if (passwordPanel.activeSelf && Input.GetKeyDown(KeyCode.Backspace))
-        {
-            GameObject current = EventSystem.current.currentSelectedGameObject;
-            if (current != null)
-            {
-                for (int i = 0; i < digitInputs.Length; i++)
-                {
-                    if (current == digitInputs[i].gameObject)
-                    {
-                        // Èç¹ûµ±Ç°ÊäÈë¿òÎª¿ÕÇÒ²»ÊÇµÚÒ»¸ö£¬Ôò½«½¹µãÒÆµ½Ç°Ò»¸ö
-                        if (string.IsNullOrEmpty(digitInputs[i].text) && i > 0)
-                        {
-                            EventSystem.current.SetSelectedGameObject(digitInputs[i - 1].gameObject);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-       // Esc »ò Q ¼ü¹Ø±ÕÃæ°å
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q))
-            {
-                HidePanel();
-            }
-        }
-
-    /// <summary>
-    /// ¼ì²é4¸öÊäÈë¿òÊÇ·ñÒÑÊäÈëÄÚÈİ£¬²¢ÑéÖ¤ÃÜÂëÊÇ·ñÕıÈ·
+    /// æ£€æŸ¥4ä¸ªè¾“å…¥æ¡†æ˜¯å¦å·²è¾“å…¥å†…å®¹ï¼Œå¹¶éªŒè¯å¯†ç æ˜¯å¦æ­£ç¡®
     /// </summary>
     void TrySubmitPassword()
     {
-        string entered = "";
-        foreach (var input in digitInputs)
+        //å½“å‰è¾“å…¥å°äºå››ä½åˆ™è®¾ç½®æˆé»‘è‰²ã€ä¸”ä¸æ£€æµ‹
+        if(currentInput.Length<4)
         {
-            entered += input.text;
+            for (int i = 0; i < 4; i++)
+            {
+                digitInputs[i].color = Color.black;
+            }
+            return;
         }
-        if (entered.Length == digitInputs.Length)
+
+        //å¦åˆ™æ£€æµ‹æ˜¯å¦æ­£ç¡®ï¼Œé”™è¯¯åˆ™è®¾ç½®ä¸ºçº¢è‰²
+        if (currentInput == correctPassword)
         {
-            if (entered == correctPassword)
+            HidePanel();
+            Debug.Log($"å¯†ç æ­£ç¡®ï¼Œç®±å­æ‰“å¼€ï¼");
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
             {
-                Debug.Log($"ÃÜÂëÕıÈ·£¬Ïä×Ó´ò¿ª£¡£¨{entered}£©");
-                // ÔÚÕâÀï´¥·¢ÃÜÂëÕıÈ·ºóµÄĞĞÎª£¬ÀıÈç²¥·Å¶¯»­¡¢´ò¿ªÏä×ÓµÈ
-                HidePanel();
+                digitInputs[i].color = Color.red;
             }
-            else
-            {
-                Debug.Log($"ÃÜÂë´íÎó£¡£¨{entered}£¬ÕıÈ·ÃÜÂëÎª {correctPassword}£©");
-                ClearInputs();
-                EventSystem.current.SetSelectedGameObject(digitInputs[0].gameObject);
-            }
+            Debug.Log($"å¯†ç é”™è¯¯ï¼");
         }
     }
 }

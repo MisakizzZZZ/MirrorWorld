@@ -12,6 +12,19 @@ public class MirrorInteratable : MonoBehaviour
     //公共变量
     static List<Portal> mirrorScripts; //所有镜子的脚本
 
+    //判断某个gameObject是否可见？这里的意思是，玩家当前能通过镜子看见这个物体
+    public static bool CheckIsVisibleInAnyMirror(GameObject gameObject)
+    {
+        foreach (var mirrorScript in mirrorScripts)
+        {
+            if (mirrorScript.CheckObjectVisibleInMirror(gameObject))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     //状态
     protected bool isVisibleInPlayerCamera;  //是否在玩家视锥体内可见
@@ -49,14 +62,7 @@ public class MirrorInteratable : MonoBehaviour
     
     private bool CheckIsVisibleInAnyMirror()
     {
-        foreach(var mirrorScript in mirrorScripts)
-        {
-            if (mirrorScript.CheckObjectVisibleInMirror(this.gameObject))
-            {
-                return true;
-            }
-        }
-        return false;
+        return CheckIsVisibleInAnyMirror(this.gameObject);
     }
 
 

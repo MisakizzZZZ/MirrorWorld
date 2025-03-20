@@ -9,6 +9,8 @@ public class SweeperAI : MonoBehaviour
     private NavMeshAgent agent; //导航网格代理
     private Transform playerTransform;
 
+    private bool isVisibleInAnyMirror;  //是否在镜子中可见。这里的意思是，玩家当前能通过镜子看见这个物体
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +21,19 @@ public class SweeperAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(playerTransform.position);
+        isVisibleInAnyMirror = MirrorInteratable.CheckIsVisibleInAnyMirror(this.gameObject);
+
+        if(isVisibleInAnyMirror)
+        {
+            agent.enabled = true;
+            agent.SetDestination(playerTransform.position);
+        }
+        else
+        {
+            agent.enabled = false;
+        }
+
+        
     }
 }
 

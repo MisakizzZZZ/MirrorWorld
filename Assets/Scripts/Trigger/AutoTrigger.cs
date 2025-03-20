@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class AutoTrigger : MonoBehaviour
 {
+
     //内部变量
     private BoxCollider boxCollider;
 
-    void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         
     }
 
-    void OnTriggerExit(Collider other)
+    public virtual void OnTriggerExit(Collider other)
     {
        
     }

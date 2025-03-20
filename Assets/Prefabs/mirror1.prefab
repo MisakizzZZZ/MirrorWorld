@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 6433858033480061195}
   m_Layer: 0
   m_Name: mirror1
-  m_TagString: Untagged
+  m_TagString: Mirror
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -350,6 +350,7 @@ MonoBehaviour:
   player: {fileID: 0}
   followSpeed: 5
   dragDistanceFromPlayer: 0.5
+  rotationSpeed: 90
   collisionLayers:
     serializedVersion: 2
     m_Bits: 0
