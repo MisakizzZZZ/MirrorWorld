@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class DoorInteract : InteractableObject
 {
+    public float openYRotation = -90f; //闂ㄦ墦寮�鐨勮搴︽槸澶氬皯
+
+
     public override void Interact()
     {
         if (KeyInteract.hasGainedKey)
         {
-            Debug.Log("与门进行了互动");
-            UIManager.Instance.ShowSubtitle("Door opened!");
-            gameObject.SetActive(false);
+            UIManager.Instance.ShowSubtitle("It's open!");
+            gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, openYRotation, gameObject.transform.eulerAngles.z);
+            SetHighlight(false);
+            this.enabled = false; //绂佺敤鑴氭湰闃叉閲嶅浜掑姩
         }
         else
         {
-            Debug.Log("没有钥匙，无法打开门");
-            UIManager.Instance.ShowSubtitle("You need a key to open the door!");
+            UIManager.Instance.ShowSubtitle("I hope the key is nearby...");
         }
     }
 }

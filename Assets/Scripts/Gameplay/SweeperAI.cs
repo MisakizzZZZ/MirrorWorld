@@ -39,7 +39,6 @@ public class SweeperAI : MonoBehaviour
         }
 
         //判断和玩家的距离
-        Debug.Log(Vector3.SqrMagnitude(playerTransform.position - this.transform.position));
         if(Vector3.SqrMagnitude(playerTransform.position - this.transform.position)< damageDistance* damageDistance)
         {
             UIManager.Instance.GetHurt();

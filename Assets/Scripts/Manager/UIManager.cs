@@ -25,6 +25,13 @@ public class UIManager : UnitySingleton<UIManager>
 
     //受伤面板
     private GameObject screenDamageCanvas;
+    private string[] dialogues = { 
+        "What—?! Agh!",
+         "Ngh! Something's here—!",
+        "I— I can’t see it… but it’s here!",
+        "I feel it… but I can’t see it!",
+        "Gah—!!",
+    };
 
 
     void Awake()
@@ -41,8 +48,6 @@ public class UIManager : UnitySingleton<UIManager>
     {
         //隐藏密码界面
         HidePasswordPanel();
-
-        ShowSubtitle("You are testing subtitle");
     }
 
 
@@ -84,6 +89,9 @@ public class UIManager : UnitySingleton<UIManager>
             screenDamageCanvas.SetActive(true);
             screenDamageCanvas.GetComponentInChildren<AudioSource>().enabled = true;
             screenDamageCanvas.GetComponentInChildren<Animator>().enabled = true;
+
+            //说一些话
+            UIManager.Instance.ShowSubtitle(dialogues[Random.Range(0, dialogues.Length)]);
         }
     }
 

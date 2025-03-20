@@ -14,9 +14,8 @@ public class KeyInteract : InteractableObject
     }
     public override void Interact()
     {
-        Debug.Log("与钥匙进行了互动");
         hasGainedKey = true;
-        UIManager.Instance.ShowSubtitle("Item \"Door Key\" earned!");
+        UIManager.Instance.ShowSubtitle("I got the key!");
         gameObject.SetActive(false);
     }
 
